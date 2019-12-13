@@ -1,3 +1,6 @@
+# 说明
+简单了解filebeat开发插件的流程，及插件工作的机制
+
 # filebeat-plugin
 filebeat plugin processor
 
@@ -19,12 +22,25 @@ filebeat plugin processor
 # 运行
 ./filebeat -e -c filebeat_test.yml --plugin add_sample_data.so
 
+# 开发
+- 下载beats源码 https://github.com/elastic/beats
+- 可以选择filebeat对应版本的分支
+- libbeat/processors下新建add_sample_data目录(下面有自带processor)
+- 插件编译打包在当前目录下
+
 # 打包
-基于 https://github.com/elastic/beats 源码进行打包否则有问题
+基于 https://github.com/elastic/beats 源码下进行编译打包
 
 ```$xslt
 cd libbeat/processors/add_sample_data
 go build -buildmode=plugin
+```
+
+# filebeat.yml配置
+```$xslt
+#================================ Processors =====================================
+processors:
+  - add_sample_data: ~
 ```
 
 # 问题
