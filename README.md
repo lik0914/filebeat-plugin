@@ -6,6 +6,9 @@ filebeat plugin processor
 
 - 采样率控制config.go中Sample
 
+# add_sample_data使用场景
+准确率要求不高的情况下，可以使用采样的机制，比如，通过日志，计算服务的可用性，基于统计计数的情况，会存在误差，服务波动情况下，可能导致抽样的数据都是正常的，异常的日志漏掉。
+
 # 版本信息
 - os: mac 10.14.6
 - golang: go1.12.7
