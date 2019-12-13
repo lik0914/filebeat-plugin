@@ -1,11 +1,21 @@
 # 说明
-简单了解filebeat开发插件的流程，及插件工作的机制
+简单了解filebeat开发插件的流程，及插件工作的机制。
+# Processors 说明
+filebeat对于收集的每行日志都封装成event， event 发送到 output 之前，可在配置文件中定义processors去处理 event。
+processor 作用：
+- 减少导出的字段
+- 添加其他的 metadata
+- 执行额外的处理和解码
+
+每个 processor 会接收一个 event，将一些定义好的行为应用到 event，然后返回 event，如果你在配置文件中定义了一系列 processors，那么他会按定义的顺序依次执行。
+
+所以，可以基于此机制进行filebeat功能扩展。
 
 # filebeat-plugin
 filebeat plugin processor
 
 # add_sample_data
-- 基于URL维度计数，进行采样控制
+- 基于URL维度计数，进行采样收集
 
 - 采样率控制config.go中Sample
 
@@ -19,7 +29,7 @@ filebeat plugin processor
 
 基于以上版本测试通过
 
-# 运行
+# 测试运行
 ./filebeat -e -c filebeat_test.yml --plugin add_sample_data.so
 
 # 开发
@@ -27,6 +37,17 @@ filebeat plugin processor
 - 可以选择filebeat对应版本的分支
 - libbeat/processors下新建add_sample_data目录(下面有自带processor)
 - 插件编译打包在当前目录下
+```$xslt
+// processor名称定义用于filebeat.yml配置文件Processors配置
+const (
+	processorName = "add_sample_data"
+)
+
+// 插件注册
+var Bundle = plugin.Bundle(
+	processors.Plugin(processorName, newSampleProcessor),
+)
+```
 
 # 打包
 基于 https://github.com/elastic/beats 源码下进行编译打包
